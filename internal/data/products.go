@@ -63,6 +63,8 @@ func (p ProductModel) Insert(product *Product) error {
 }
 
 func (p ProductModel) Get(id int64) (*Product, error) {
+
+	log.Println(id)
 	if id < 1 {
 		return nil, ErrRecordNotFound
 	}

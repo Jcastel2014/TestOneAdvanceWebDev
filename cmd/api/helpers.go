@@ -102,14 +102,14 @@ func (a *appDependencies) writeJSON(w http.ResponseWriter, status int, data enve
 func (a *appDependencies) readIDParam(r *http.Request) (int64, int64, error) {
 	params := httprouter.ParamsFromContext(r.Context())
 
-	id, err := strconv.ParseInt(params.ByName("id"), 10, 64)
-	if err != nil || id < 1 {
-		return 0, 0, errors.New("invalid id parameter")
-	}
+	var id int64
 
 	rid, err := strconv.ParseInt(params.ByName("rid"), 10, 64)
 	if err != nil || rid < 1 {
-		return 0, 0, errors.New("invalid id parameter")
+		id, err = strconv.ParseInt(params.ByName("id"), 10, 64)
+		if err != nil || id < 1 {
+			return 0, 0, errors.New("invalid id parameter")
+		}
 	}
 
 	return id, rid, nil

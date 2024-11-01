@@ -37,7 +37,7 @@ getaAll:
 .PHONY: updateProduct
 updateProduct:
 	@echo 'Updating Product ${id}'; \
-	curl -X PATCH localhost:3000/updateProduct/${id} -d '{"name":"Chainsaw", "image_url":"newImage"}'
+	curl -X PATCH localhost:3000/updateProduct/${id} -d '{"name":"Dog", "image_url":"No!"}'
 
 
 .PHONY: createReview

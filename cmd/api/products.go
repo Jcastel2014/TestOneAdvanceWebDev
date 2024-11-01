@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/jcastel2014/test1/internal/data"
@@ -66,7 +67,9 @@ func (a *appDependencies) createProduct(w http.ResponseWriter, r *http.Request) 
 }
 
 func (a *appDependencies) displayProduct(w http.ResponseWriter, r *http.Request) {
+
 	id, _, err := a.readIDParam(r)
+	log.Println(id)
 
 	if err != nil {
 		a.notFoundResponse(w, r)
