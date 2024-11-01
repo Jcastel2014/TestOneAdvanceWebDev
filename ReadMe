@@ -1,0 +1,9 @@
+a.Create a product 
+    You can use either make a to 'make a' single product or make a_all to make multiple products as examples.
+    This is the structure of a json for this function:
+    BODY='{"name":"", "description":"", "category":"", "image_url":""}'	
+
+b.display a product 
+    To display a product you can use 'make displayProduct id=#' replace the # with a number 
+
+
