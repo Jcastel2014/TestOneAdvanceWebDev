@@ -73,10 +73,11 @@ func (p ProductModel) GetReview(id int64, rid int64) (*Reviews, error) {
 	}
 
 	query := `
-	SELECT id, product_id, rating, helpful_count, comment, created_at, updated_at 
-	FROM reviews
-        WHERE id = $1 AND product_id = $2
-		
+	SELECT R.id, P.name, R.rating, R.helpful_count, R.comment, R.created_at, R.updated_at 
+	FROM reviews AS R
+	INNER JOIN products AS P ON P.id = R.product_id
+	WHERE R.id = $1 AND R.product_id = $2;
+
 	`
 
 	args := []any{rid, id}
@@ -146,6 +147,46 @@ func (p ProductModel) DeleteReview(id int64, rid int64) error {
 
 	return p.UpdateAverage(id)
 
+}
+
+func (p ProductModel) GetAllReviews(product int64) ([]*Reviews, error) {
+	query := `
+	SELECT R.id, P.name, R.rating, R.helpful_count, R.comment, R.created_at, R.updated_at
+	FROM reviews AS R
+	INNER JOIN products AS P ON P.id = R.product_id
+	WHERE P.id = $1 OR NOT EXISTS (SELECT 1 FROM products WHERE id = $1);
+	`
+
+	log.Println(product)
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	rows, err := p.DB.QueryContext(ctx, query, product)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	reviews := []*Reviews{}
+
+	for rows.Next() {
+		var review Reviews
+		err := rows.Scan(&review.ID, &review.Product_Id, &review.Rating, &review.Helpful_Count, &review.Comment, &review.Created_at, &review.Updated_at)
+
+		if err != nil {
+			return nil, err
+		}
+
+		reviews = append(reviews, &review)
+	}
+
+	err = rows.Err()
+	if err != nil {
+		return nil, err
+	}
+
+	return reviews, nil
 }
 func (p ProductModel) DoesProductExists(id int64) error {
 	query := `

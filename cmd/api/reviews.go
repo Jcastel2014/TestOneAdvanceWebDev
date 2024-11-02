@@ -201,3 +201,44 @@ func (a *appDependencies) deleteReview(w http.ResponseWriter, r *http.Request) {
 	}
 
 }
+
+func (a *appDependencies) GetAllReviews(w http.ResponseWriter, r *http.Request) {
+	var queryParametersData struct {
+		Product string
+	}
+
+	queryParameters := r.URL.Query()
+	queryParametersData.Product = a.getSingleQueryParameters(queryParameters, "product", "")
+
+	// v := validator.New()
+
+	// data.ValidateFilters(v, queryParametersData.Filters)
+	// if !v.IsEmpty() {
+	// 	a.failedValidationResponse(w, r, v.Errors)
+	// 	return
+	// }
+
+	product_id, err := toInt(queryParametersData.Product)
+
+	if err != nil {
+		a.serverErrResponse(w, r, err)
+		return
+	}
+
+	review, err := a.productModel.GetAllReviews(product_id)
+
+	if err != nil {
+		a.serverErrResponse(w, r, err)
+		return
+	}
+
+	data := envelope{
+		"review": review,
+	}
+
+	err = a.writeJSON(w, http.StatusOK, data, nil)
+
+	if err != nil {
+		a.serverErrResponse(w, r, err)
+	}
+}
