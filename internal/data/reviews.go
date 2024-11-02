@@ -107,14 +107,20 @@ func (p ProductModel) UpdateReview(review *Reviews, id int64) error {
 	UPDATE reviews
 	SET rating =$1, comment=$2, updated_at=$3
 	WHERE id = $4
-	RETURNING id
+	RETURNING product_id
 	`
 
 	args := []any{review.Rating, review.Comment, time.Now(), id}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	return p.DB.QueryRowContext(ctx, query, args...).Scan(&review.ID)
+	err := p.DB.QueryRowContext(ctx, query, args...).Scan(&review.ID)
+
+	if err != nil {
+		return err
+	}
+
+	return p.UpdateAverage(review.ID)
 
 }
 
@@ -127,7 +133,8 @@ func (p ProductModel) DeleteReview(id int64, rid int64) error {
 
 	query := `
 	DELETE FROM reviews
-	WHERE ID = $1`
+	WHERE ID = $1
+	`
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()

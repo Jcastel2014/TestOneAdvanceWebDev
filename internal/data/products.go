@@ -180,8 +180,8 @@ func (p ProductModel) Delete(id int64) error {
 	}
 
 	query := `
-	DELETE FROM products
-	WHERE id =$1
+	DELETE FROM images
+	WHERE id = (select image_id from products where id = $1)
 	`
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)

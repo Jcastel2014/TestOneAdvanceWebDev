@@ -1,9 +1,72 @@
-a.Create a product 
-    You can use either make a to 'make a' single product or make a_all to make multiple products as examples.
-    This is the structure of a json for this function:
-    BODY='{"name":"", "description":"", "category":"", "image_url":""}'	
+a. create a product
+    Json:
+            '{"name":"", "description":"", "category":"", "image_url":"", "price":}'
+    Examples:
+            '{"name":"Broom", "description":"Sweep Sweep", "category":"Cleaning", "image_url":"https://m.media-amazon.com/images/I/712Jm9przrL._AC_UL320_.jpg", "price":8.10}'
 
-b.display a product 
-    To display a product you can use 'make displayProduct id=#' replace the # with a number 
+            '{"name":"Dog", "description":"It Barks n stuff", "category":"Cosmetics", "image_url":"https://m.media-amazon.com/images/I/81WXESPWXPL.__AC_SX300_SY300_QL70_FMwebp_.jpg", "price":15.00}'
+
+            '{"name":"Spoon", "description":"Mouth", "category":"Utensils", "image_url":"https://m.media-amazon.com/images/I/61HG6u2+PQL._AC_UL320_.jpg", "price":1.11}'
+
+    Change CREATEPRODUCT variable from .envrc to change jsons
+    Use 'make createProduct' for quick example
 
 
+b. display a specific product
+
+    Use make displayProduct id=(int) for quick use
+
+c. update a specific product
+
+    Use make updateProduct id=(int), change json from Makefile
+
+d. delete a specific product
+
+    Use make deleteProduct id=(int) for quick use
+
+e. display all products
+
+    Use make displayAllProducts for quick use
+
+f. Perform searching, filtering, sorting on products
+
+    Use make listProducts filter=(key=defaultvalue) for quick use
+
+g. create a review for a specific product
+
+    Json:
+        '{"rating":,"comment":""}'
+    Examples:
+        '{"rating":2,"comment":"bark bark"}'
+        '{"rating":3,"comment":"I love dogs"}'
+        '{"rating":1,"comment":"Dogs or Ok"}'
+        '{"rating":5,"comment":"Yay Broom"}'
+        '{"rating":4,"comment":"Broom"}'
+        '{"rating":1,"comment":"Spoom"}'
+
+    Change CREATEPRODUCT variable from .envrc to change jsons
+    Use make createReview id=(int) for quick use
+
+h. display a specific review for a specific product
+
+    Use make getReview id=(product id) rid=(review id) for quick use
+
+i. update a specific review for a specific product
+
+    Use make updateReview id=(product id) rid=(review id) for quick use, change json from Makefile
+
+j. delete a specific review for a specific product
+
+    Use make deleteReview id=(product id) rid=(review id) for quick use
+
+k. display all reviews
+
+    Use make displayAllReviews for quick use
+
+l. display all reviews for a specific product
+
+    Use make displayAllReviews filter=product=(product id) for quick use
+
+
+m. Perform searching, filtering, sorting on reviews
+    Use make displayAllReviews filter=(key=defaultValue) for quick use

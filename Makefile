@@ -29,22 +29,26 @@ deleteProduct:
 	@echo 'Deleting Product'; \
 	curl -X DELETE localhost:3000/deleteProduct/${id} 
 
-.PHONY: getAll
-getaAll:
+.PHONY: displayAllProducts
+displayAllProducts:
 	@echo 'Deleting Product'; \
-	curl -i localhost:3000/displayAllProducts?sort=-id
+	curl -i localhost:3000/displayAllProducts
+
+.PHONY: listProducts
+listProducts:
+	@echo 'Deleting Product'; \
+	curl -i localhost:3000/displayAllProducts?${filter}
 
 .PHONY: updateProduct
 updateProduct:
 	@echo 'Updating Product ${id}'; \
-	curl -X PATCH localhost:3000/updateProduct/${id} -d '{"name":"Dog", "image_url":"No!"}'
+	curl -X PATCH localhost:3000/updateProduct/${id} -d '{"name":"Spoom", "Description":"Mouth!"}'
 
 
 .PHONY: createReview
 createReview:
 	@echo 'Creating Review'; \
-	BODY='{"rating":2,"comment":"bark bark"}'; \
-	echo "$$BODY"; \
+	BODY=${CREATEREVIEW}; \
 	curl -X POST -d "$$BODY" localhost:3000/product/${id}/createReview ; \
 	
 .PHONY: getReview
@@ -62,9 +66,14 @@ deleteReview:
 	@echo 'Deleting Product'; \
 	curl -X DELETE localhost:3000/product/${id}/deleteReview/${rid}
 
+.PHONY: displayAllReviews
+displayAllReviews:
+	@echo 'Displaying Reviews'; \
+	curl -i localhost:3000/reviews?${filter}
+
 .PHONY: createProduct
 createProduct:
 	@echo 'Creating Product'; \
-    BODY='{"name":"Broom", "description":"Sweep Sweep", "category":"Cleaning", "image_url":"https://m.media-amazon.com/images/I/712Jm9przrL._AC_UL320_.jpg", "price":8.10}'; \
+    BODY=${CREATEPRODUCT}; \
 	curl -i -d "$$BODY" localhost:3000/createProduct ; \
 	echo 'create a product'
