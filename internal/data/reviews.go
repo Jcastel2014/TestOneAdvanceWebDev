@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"fmt"
 	"log"
 	"time"
 
@@ -149,19 +150,20 @@ func (p ProductModel) DeleteReview(id int64, rid int64) error {
 
 }
 
-func (p ProductModel) GetAllReviews(product int64) ([]*Reviews, error) {
-	query := `
+func (p ProductModel) GetAllReviews(product int64, filters Filters) ([]*Reviews, error) {
+	query := fmt.Sprintf(`
 	SELECT R.id, P.name, R.rating, R.helpful_count, R.comment, R.created_at, R.updated_at
 	FROM reviews AS R
 	INNER JOIN products AS P ON P.id = R.product_id
-	WHERE P.id = $1 OR NOT EXISTS (SELECT 1 FROM products WHERE id = $1);
-	`
+	WHERE P.id = $1 OR NOT EXISTS (SELECT 1 FROM products WHERE id = $1)
+	ORDER BY %s %s, R.id ASC
+	LIMIT $2 OFFSET $3
+	`, filters.sortColumn(), filters.sortDirection())
 
-	log.Println(product)
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	rows, err := p.DB.QueryContext(ctx, query, product)
+	rows, err := p.DB.QueryContext(ctx, query, product, filters.limit(), filters.offset())
 	if err != nil {
 		return nil, err
 	}
