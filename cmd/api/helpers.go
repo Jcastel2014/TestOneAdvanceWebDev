@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -102,15 +103,25 @@ func (a *appDependencies) writeJSON(w http.ResponseWriter, status int, data enve
 func (a *appDependencies) readIDParam(r *http.Request) (int64, int64, error) {
 	params := httprouter.ParamsFromContext(r.Context())
 
-	var id int64
+	id, errO := strconv.ParseInt(params.ByName("id"), 10, 64)
 
 	rid, err := strconv.ParseInt(params.ByName("rid"), 10, 64)
 	if err != nil || rid < 1 {
-		id, err = strconv.ParseInt(params.ByName("id"), 10, 64)
-		if err != nil || id < 1 {
+		if errO != nil || id < 1 {
+			log.Println(id)
+			log.Println(rid)
 			return 0, 0, errors.New("invalid id parameter")
 		}
 	}
+
+	if errO != nil || id < 1 {
+		log.Println(id)
+		log.Println(rid)
+		return 0, 0, errors.New("invalid id parameter")
+	}
+
+	log.Println(id)
+	log.Println(rid)
 
 	return id, rid, nil
 }

@@ -99,6 +99,22 @@ func (p ProductModel) GetReview(id int64, rid int64) (*Reviews, error) {
 	return &review, nil
 
 }
+
+func (p ProductModel) UpdateReview(review *Reviews, id int64) error {
+	query := `
+	UPDATE reviews
+	SET rating =$1, comment=$2, updated_at=$3
+	WHERE id = $4
+	RETURNING id
+	`
+
+	args := []any{review.Rating, review.Comment, time.Now(), id}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	return p.DB.QueryRowContext(ctx, query, args...).Scan(&review.ID)
+
+}
 func (p ProductModel) DoesProductExists(id int64) error {
 	query := `
 		SELECT COUNT(*)

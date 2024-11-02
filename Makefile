@@ -43,7 +43,7 @@ updateProduct:
 .PHONY: createReview
 createReview:
 	@echo 'Creating Review'; \
-	BODY='{"rating":6,"comment":"are you even trying"}'; \
+	BODY='{"rating":2,"comment":"bark bark"}'; \
 	echo "$$BODY"; \
 	curl -X POST -d "$$BODY" localhost:3000/product/${id}/createReview ; \
 	
@@ -52,8 +52,11 @@ getReview:
 	@echo 'Displaying Review'; \
 	curl -i localhost:3000/product/${id}/getReview/${rid}
 	
-
-
+.PHONY: updateReview
+updateReview:
+	@echo 'Updating Review'; \
+	curl -X PATCH localhost:3000/product/${id}/updateReview/${rid} -d '{"rating":1, "comment":"Yes!"}'
+	
 .PHONY: createProduct
 createProduct:
 	@echo 'Creating Product'; \

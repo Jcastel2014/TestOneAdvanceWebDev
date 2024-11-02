@@ -20,6 +20,7 @@ func (a *appDependencies) routes() http.Handler {
 
 	router.HandlerFunc(http.MethodPost, "/product/:id/createReview", a.createReview)
 	router.HandlerFunc(http.MethodGet, "/product/:id/getReview/:rid", a.getReview)
+	router.HandlerFunc(http.MethodPatch, "/product/:id/updateReview/:rid", a.updateReview)
 
 	//update
 	// router.HandlerFunc(http.MethodPatch, "/updateProduct/:id", a.updateProduct)
