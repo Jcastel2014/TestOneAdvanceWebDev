@@ -57,6 +57,11 @@ updateReview:
 	@echo 'Updating Review'; \
 	curl -X PATCH localhost:3000/product/${id}/updateReview/${rid} -d '{"rating":1, "comment":"Yes!"}'
 	
+.PHONY: deleteReview
+deleteReview:
+	@echo 'Deleting Product'; \
+	curl -X DELETE localhost:3000/product/${id}/deleteReview/${rid}
+
 .PHONY: createProduct
 createProduct:
 	@echo 'Creating Product'; \

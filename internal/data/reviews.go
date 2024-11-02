@@ -115,6 +115,38 @@ func (p ProductModel) UpdateReview(review *Reviews, id int64) error {
 	return p.DB.QueryRowContext(ctx, query, args...).Scan(&review.ID)
 
 }
+
+func (p ProductModel) DeleteReview(id int64, rid int64) error {
+	err := p.DoesProductExists(id)
+
+	if err != nil {
+		return err
+	}
+
+	query := `
+	DELETE FROM reviews
+	WHERE ID = $1`
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	result, err := p.DB.ExecContext(ctx, query, rid)
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected == 0 {
+		return ErrRecordNotFound
+	}
+
+	return p.UpdateAverage(id)
+
+}
 func (p ProductModel) DoesProductExists(id int64) error {
 	query := `
 		SELECT COUNT(*)

@@ -168,3 +168,36 @@ func (a *appDependencies) updateReview(w http.ResponseWriter, r *http.Request) {
 	}
 
 }
+
+func (a *appDependencies) deleteReview(w http.ResponseWriter, r *http.Request) {
+
+	id, rid, err := a.readIDParam(r)
+
+	if err != nil {
+		a.notFoundResponse(w, r)
+		return
+	}
+
+	err = a.productModel.DeleteReview(id, rid)
+
+	if err != nil {
+		switch {
+		case errors.Is(err, data.ErrRecordNotFound):
+			a.notFoundResponse(w, r)
+		default:
+			a.serverErrResponse(w, r, err)
+		}
+
+		return
+	}
+
+	data := envelope{
+		"message": "comment successfully deleted",
+	}
+
+	err = a.writeJSON(w, http.StatusOK, data, nil)
+	if err != nil {
+		a.serverErrResponse(w, r, err)
+	}
+
+}
