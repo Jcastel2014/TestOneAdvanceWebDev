@@ -5,6 +5,17 @@ run/api:
 	@echo 'Running Product API...'
 	@go run ./cmd/api -port=3000 -env=production -db-dsn=${PRODUCTS_DB_DSN}
 
+
+.PHONY: run/rateLimite/enabled
+run/rateLimit,enabled:
+	@echo 'Running Product API /w Rate Limit...'
+	@go run ./cmd/api -port=3000 -env=development -limiter-burst=5 -limiter-rps=2 -limiter-enabled=true -db-dsn=${PRODUCTS_DB_DSN}
+
+.PHONY: run/rateLimite/disabled
+run/rateLimit/disabled:
+	@echo 'Running Product API /w Rate Limit...'
+	@go run ./cmd/api -port=3000 -env=development -limiter-burst=5 -limiter-rps=2 -limiter-enabled=false -db-dsn=${PRODUCTS_DB_DSN}
+
 .PHONY: db/psql
 db/psql:
 	psql ${PRODUCTS_DB_DSN}

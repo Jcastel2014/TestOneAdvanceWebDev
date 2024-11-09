@@ -35,5 +35,5 @@ func (a *appDependencies) routes() http.Handler {
 	// router.HandlerFunc(http.MethodPost, "/v1/comments", a.createCommentHandler)
 
 	// router.HandlerFunc(http.MethodGet, "/v1/comments", a.listCommentsHandler)
-	return a.recoverPanic(router)
+	return a.recoverPanic(a.rateLimit(router))
 }

@@ -22,6 +22,12 @@ type serverConfig struct {
 	db   struct {
 		dsn string
 	}
+
+	limiter struct {
+		rps     float64
+		burst   int
+		enabled bool
+	}
 }
 
 type appDependencies struct {
@@ -53,6 +59,12 @@ func main() {
 	var settings serverConfig
 
 	flag.IntVar(&settings.port, "port", 4000, "Server Port")
+	flag.Float64Var(&settings.limiter.rps, "limiter-rps", 2, "Rate Limiter maximum requests per second")
+
+	flag.IntVar(&settings.limiter.burst, "limiter-burst", 5, "Rate Limiter maximum burst")
+
+	flag.BoolVar(&settings.limiter.enabled, "limiter-enabled", true, "Enable rate limiter")
+
 	flag.StringVar(&settings.env, "env", "development", "Environment(Development|Staging|Production)")
 	flag.StringVar(&settings.db.dsn, "db-dsn", "postgres://comments:fishsticks@localhost/comments?sslmode=disable", "PostgreSQL DSN")
 	flag.Parse()
